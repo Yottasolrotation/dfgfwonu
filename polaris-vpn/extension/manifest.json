@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Polaris VPN",
+  "name": "Albion VPN",
   "version": "1.0.0",
   "description": "Routes this browser through the servers of your VLESS / Hysteria2 subscription, with latency tests.",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApBnUATnRVMXwG7NmgIFTQWr6S0RCcFdJWVYhe90g+LKDnUbiC2vN2uq7jmi4aQ4cAVASD2vmqnHvNM09DNQ/ypVwALnDJFC7sCBjXS1SLA/i3AD9NJ+rDzaYm1UHayackFsaCzv9e6I24RLF8cqWCvDA3JP+fe7xY6Ki5bzeb/iGrUdySALJrvlrfaqMGk4UiIY7g0Dc9fdA8ZoVBya2fOnwGHYYrjIYp5553yiOX/E4dad+9apbsa6j4mcAjeU7KAAIoDoisNHRBKMLnNRpUnd/Oox04dEhRzwGFLU3nwzXuVwwVUKyDLO+Sebs0tPssr67ZShfyDoCJioTRPuvyQIDAQAB",
@@ -20,7 +20,7 @@
     "type": "module"
   },
   "action": {
-    "default_title": "Polaris VPN",
+    "default_title": "Albion VPN",
     "default_popup": "popup.html",
     "default_icon": {
       "16": "icons/icon16.png",

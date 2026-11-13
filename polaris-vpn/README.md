@@ -1,4 +1,4 @@
-# Polaris VPN
+# Albion VPN
 
 A Chrome extension that sends this browser's traffic (and only this browser's) through the servers of a
 VLESS / Hysteria2 subscription. It lists the servers by country, measures their latency and connects with
@@ -37,6 +37,9 @@ Requires Node.js 18+ and Chrome, Chromium, Brave or Edge 116+.
 Keep the project folder where it is after installing: the browser starts the helper from it. To remove the
 registration run `node host/install.mjs --uninstall`.
 
+The folder, the package name and the native messaging host (`com.polaris.vpn`) keep the project's earlier
+name, Polaris, so that existing installations keep working.
+
 ## Use
 
 - **Country filter and search** narrow the list. South Korea is shown first when the subscription has it.
@@ -44,8 +47,10 @@ registration run `node host/install.mjs --uninstall`.
   - *TCP ping* – time of a TCP handshake with the server (best of three).
   - *Tunnel test* – time of a real HTTP request sent through the server, which also proves the server
     works. Hysteria2 servers are UDP-only, so they always use this test.
-- Select a server and press the power button. Once connected the popup shows the exit IP and country as
-  seen by Cloudflare. Selecting another server while connected switches to it.
+- Select a server and press **Connect**. Once connected the popup shows the exit IP and country as seen by
+  Cloudflare. Selecting another server while connected switches to it.
+- The rail on the left switches between the server list, **Details** (subscription usage and expiry, the
+  server's address and protocol) and the subscription link.
 
 While connected, WebRTC is limited to proxied traffic so it cannot reveal the real address. To cover
 incognito windows too, allow the extension in incognito on its details page.
