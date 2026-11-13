@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Albion AI — контроль в каждом движении</title>
+    <meta
+      name="description"
+      content="Albion AI — распознавание объектов, настройка наведения и визуализации. Посмотри интерфейс, демонстрацию и возможности приложения для Windows."
+    />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#07080a" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Albion AI — контроль в каждом движении" />
+    <meta
+      property="og:description"
+      content="Наведение, визуалы, модель и конфиги. Твои настройки — в одном интерфейсе."
+    />
+    <meta property="og:image" content="https://albionai.lol/assets/gui/settings.png" />
+    <meta property="og:url" content="https://albionai.lol/" />
+    <link rel="canonical" href="https://albionai.lol/" />
+    <link rel="icon" href="assets/logo.png" type="image/png" />
+    <link rel="preload" as="font" type="font/woff" href="assets/fonts/exo2-800.woff" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-cyrillic.woff2" crossorigin />
+    <link rel="stylesheet" href="css/site.css" />
+    <script>
+      /* Set before first paint so the scroll-driven layout never flashes. Queries mirror js/site.js. */
+      (function (c, m) {
+        c.add("js");
+        if (m("(prefers-reduced-motion: reduce)").matches) return;
+        c.add("motion");
+        if (m("(min-height: 560px)").matches) c.add("fx-hero");
+        if (m("(min-width: 960px) and (min-height: 700px)").matches) c.add("fx-showcase");
+      })(document.documentElement.classList, window.matchMedia.bind(window));
+    </script>
+    <script defer src="js/site.js"></script>
+  </head>
+  <body id="top">
+    <svg class="sprite" aria-hidden="true" focusable="false">
+      <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></symbol>
+      <symbol id="i-arrow-up" viewBox="0 0 24 24"><path d="m5 12 7-7 7 7" /><path d="M12 19V5" /></symbol>
+      <symbol id="i-play" viewBox="0 0 24 24"><polygon points="6 3 20 12 6 21 6 3" /></symbol>
+      <symbol id="i-pause" viewBox="0 0 24 24">
+        <rect x="14" y="4" width="4" height="16" rx="1" /><rect x="6" y="4" width="4" height="16" rx="1" />
+      </symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14" /><path d="M12 5v14" /></symbol>
+      <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></symbol>
+      <symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6" /></symbol>
+      <symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6" /></symbol>
+      <symbol id="i-menu" viewBox="0 0 24 24">
+        <line x1="4" x2="20" y1="7" y2="7" /><line x1="4" x2="20" y1="17" y2="17" />
+      </symbol>
+      <symbol id="i-monitor" viewBox="0 0 24 24">
+        <rect width="20" height="14" x="2" y="3" rx="2" /><line x1="8" x2="16" y1="21" y2="21" />
+        <line x1="12" x2="12" y1="17" y2="21" />
+      </symbol>
+      <symbol id="i-zoom" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="8" /><line x1="21" x2="16.65" y1="21" y2="16.65" />
+        <line x1="11" x2="11" y1="8" y2="14" /><line x1="8" x2="14" y1="11" y2="11" />
+      </symbol>
+      <symbol id="i-sliders" viewBox="0 0 24 24">
+        <line x1="21" x2="14" y1="4" y2="4" /><line x1="10" x2="3" y1="4" y2="4" />
+        <line x1="21" x2="12" y1="12" y2="12" /><line x1="8" x2="3" y1="12" y2="12" />
+        <line x1="21" x2="16" y1="20" y2="20" /><line x1="12" x2="3" y1="20" y2="20" />
+        <line x1="14" x2="14" y1="2" y2="6" /><line x1="8" x2="8" y1="10" y2="14" />
+        <line x1="16" x2="16" y1="18" y2="22" />
+      </symbol>
+      <symbol id="i-eye" viewBox="0 0 24 24">
+        <path
+          d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"
+        />
+        <circle cx="12" cy="12" r="3" />
+      </symbol>
+      <symbol id="i-cpu" viewBox="0 0 24 24">
+        <rect width="16" height="16" x="4" y="4" rx="2" /><rect width="6" height="6" x="9" y="9" rx="1" />
+        <path d="M15 2v2" /><path d="M15 20v2" /><path d="M2 15h2" /><path d="M2 9h2" />
+        <path d="M20 15h2" /><path d="M20 9h2" /><path d="M9 2v2" /><path d="M9 20v2" />
+      </symbol>
+      <symbol id="i-folder" viewBox="0 0 24 24">
+        <path
+          d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"
+        />
+      </symbol>
+    </svg>
+
+    <a class="skip-link" href="#main">Перейти к содержимому</a>
+
+    <header class="site-header">
+      <div class="wrap header-row">
+        <a class="brand" href="#top" aria-label="Albion AI — на главную">
+          <img src="assets/logo.png" alt="" width="30" height="30" />
+          <span>Albion <span class="brand-ai">AI</span></span>
+        </a>
+        <nav class="main-nav" id="main-nav" aria-label="Основная навигация">
+          <a href="#demo">Демо</a>
+          <a href="#interface">Интерфейс</a>
+          <a href="#hardware">Оборудование</a>
+          <a href="#faq">FAQ</a>
+        </nav>
+        <div class="header-end">
+          <span class="status-pill status-pill-small"><i aria-hidden="true"></i>Скоро в продаже</span>
+          <button
+            class="menu-toggle icon-button"
+            type="button"
+            aria-controls="main-nav"
+            aria-expanded="false"
+            aria-label="Открыть меню"
+          >
+            <svg class="icon icon-menu" aria-hidden="true"><use href="#i-menu" /></svg>
+            <svg class="icon icon-close" aria-hidden="true"><use href="#i-x" /></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+      <!-- Hero: on scroll the copy fades out and the demo expands to fill the screen -->
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-pin">
+          <div class="hero-glow" aria-hidden="true"></div>
+          <div class="hero-copy">
+            <p class="chip">
+              <svg class="icon" aria-hidden="true"><use href="#i-monitor" /></svg>Приложение для Windows
+            </p>
+            <h1 id="hero-title">Контроль в&nbsp;каждом движении.</h1>
+            <p class="hero-lead">
+              Распознавание объектов и наведение с&nbsp;настройками под тебя. Модель, визуалы
+              и&nbsp;конфиги&nbsp;— в&nbsp;одном интерфейсе Albion&nbsp;AI.
+            </p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="#interface"
+                >Посмотреть интерфейс
+                <svg class="icon" aria-hidden="true"><use href="#i-arrow-right" /></svg
+              ></a>
+              <a class="btn btn-ghost" href="#demo"
+                ><svg class="icon icon-fill" aria-hidden="true"><use href="#i-play" /></svg>Демо в работе</a
+              >
+            </div>
+            <p class="hero-tech">
+              <span>TensorRT</span><span>CUDA</span><span>Свои конфигурации</span>
+            </p>
+          </div>
+
+          <div class="hero-media" id="demo">
+            <div class="media-frame">
+              <video
+                id="demo-video"
+                muted
+                loop
+                playsinline
+                controls
+                preload="metadata"
+                poster="assets/demo-poster.jpg"
+                width="1920"
+                height="1024"
+                aria-label="Демонстрация Albion AI в Fortnite на тренировочной карте, без звука"
+              >
+                <source src="assets/demo.mp4" type="video/mp4" />
+              </video>
+              <button class="media-toggle" type="button" aria-label="Приостановить демонстрацию" hidden>
+                <svg class="icon icon-fill icon-pause" aria-hidden="true"><use href="#i-pause" /></svg>
+                <svg class="icon icon-fill icon-play" aria-hidden="true"><use href="#i-play" /></svg>
+              </button>
+            </div>
+            <div class="media-caption">
+              <p><strong>Посмотри в движении.</strong> Демонстрация Albion AI на тренировочной карте Fortnite.</p>
+              <p class="media-note">Результат зависит от модели, оборудования и настроек приложения.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Interface: pinned on desktop, the four tabs are driven by scroll -->
+      <section class="showcase" id="interface" aria-labelledby="interface-title">
+        <div class="showcase-track">
+          <div class="showcase-pin">
+            <div class="wrap">
+              <div class="section-head" data-reveal>
+                <div>
+                  <p class="eyebrow">Интерфейс</p>
+                  <h2 id="interface-title">Всё на своих местах.</h2>
+                </div>
+                <p class="lead">Четыре раздела — от первого запуска модели до сохранённого конфига.</p>
+              </div>
+
+              <nav class="tabs" aria-label="Разделы интерфейса">
+                <span class="tabs-indicator" aria-hidden="true"></span>
+                <button class="tab" type="button" data-step="0" aria-current="true">
+                  <svg class="icon" aria-hidden="true"><use href="#i-sliders" /></svg>Настройки
+                </button>
+                <button class="tab" type="button" data-step="1">
+                  <svg class="icon" aria-hidden="true"><use href="#i-eye" /></svg>Визуалы
+                </button>
+                <button class="tab" type="button" data-step="2">
+                  <svg class="icon" aria-hidden="true"><use href="#i-cpu" /></svg>ИИ
+                </button>
+                <button class="tab" type="button" data-step="3">
+                  <svg class="icon" aria-hidden="true"><use href="#i-folder" /></svg>Конфиг
+                </button>
+              </nav>
+
+              <div class="steps">
+                <article class="step" data-name="Настройки" aria-labelledby="step-settings" data-reveal>
+                  <a class="shot" href="assets/gui/settings.png" aria-label="Увеличить скриншот: Настройки">
+                    <picture>
+                      <source srcset="assets/gui/settings.webp" type="image/webp" />
+                      <img
+                        src="assets/gui/settings.png"
+                        alt="Albion AI — вкладка «Настройки»"
+                        width="816"
+                        height="536"
+                        decoding="async"
+                      />
+                    </picture>
+                    <span class="shot-hint" aria-hidden="true"
+                      ><svg class="icon"><use href="#i-zoom" /></svg>Увеличить</span
+                    >
+                  </a>
+                  <div class="step-copy">
+                    <p class="kicker">
+                      <svg class="icon" aria-hidden="true"><use href="#i-sliders" /></svg>Настройки
+                    </p>
+                    <h3 id="step-settings">Наведение под твой сценарий.</h3>
+                    <p>Скорость, область захвата и точка наведения — рядом, без поиска по разным окнам.</p>
+                    <dl>
+                      <div>
+                        <dt>Точка наведения</dt>
+                        <dd>Голова, шея, тело или ближайшее</dd>
+                      </div>
+                      <div>
+                        <dt>Движение</dt>
+                        <dd>Скорость, Y offset и масштаб мыши</dd>
+                      </div>
+                      <div>
+                        <dt>Управление</dt>
+                        <dd>Клавиша и способ наведения</dd>
+                      </div>
+                    </dl>
+                  </div>
+                </article>
+
+                <article class="step" data-name="Визуалы" aria-labelledby="step-visuals" data-reveal>
+                  <a class="shot" href="assets/gui/visuals.png" aria-label="Увеличить скриншот: Визуалы">
+                    <picture>
+                      <source srcset="assets/gui/visuals.webp" type="image/webp" />
+                      <img
+                        src="assets/gui/visuals.png"
+                        alt="Albion AI — вкладка «Визуалы»"
+                        width="816"
+                        height="536"
+                        decoding="async"
+                      />
+                    </picture>
+                    <span class="shot-hint" aria-hidden="true"
+                      ><svg class="icon"><use href="#i-zoom" /></svg>Увеличить</span
+                    >
+                  </a>
+                  <div class="step-copy">
+                    <p class="kicker">
+                      <svg class="icon" aria-hidden="true"><use href="#i-eye" /></svg>Визуалы
+                    </p>
+                    <h3 id="step-visuals">Только нужное на экране.</h3>
+                    <p>Сам выбираешь, какую информацию показывать поверх изображения.</p>
+                    <dl>
+                      <div>
+                        <dt>Область захвата</dt>
+                        <dd>Показывает границы рабочей области</dd>
+                      </div>
+                      <div>
+                        <dt>Распознанные объекты</dt>
+                        <dd>Отображает найденные объекты</dd>
+                      </div>
+                      <div>
+                        <dt>Статус и уверенность</dt>
+                        <dd>Включаются отдельно</dd>
+                      </div>
+                    </dl>
+                  </div>
+                </article>
+
+                <article class="step" data-name="ИИ" aria-labelledby="step-ai" data-reveal>
+                  <a class="shot" href="assets/gui/ai.png" aria-label="Увеличить скриншот: ИИ">
+                    <picture>
+                      <source srcset="assets/gui/ai.webp" type="image/webp" />
+                      <img
+                        src="assets/gui/ai.png"
+                        alt="Albion AI — вкладка «ИИ»"
+                        width="816"
+                        height="536"
+                        decoding="async"
+                      />
+                    </picture>
+                    <span class="shot-hint" aria-hidden="true"
+                      ><svg class="icon"><use href="#i-zoom" /></svg>Увеличить</span
+                    >
+                  </a>
+                  <div class="step-copy">
+                    <p class="kicker">
+                      <svg class="icon" aria-hidden="true"><use href="#i-cpu" /></svg>ИИ
+                    </p>
+                    <h3 id="step-ai">Модель и захват в одном месте.</h3>
+                    <p>Выбор модели, порог уверенности, способ захвата и лимит FPS собраны на одной вкладке.</p>
+                    <dl>
+                      <div>
+                        <dt>Распознавание</dt>
+                        <dd>Модель и порог уверенности</dd>
+                      </div>
+                      <div>
+                        <dt>Захват</dt>
+                        <dd>Выбор способа захвата экрана</dd>
+                      </div>
+                      <div>
+                        <dt>Частота</dt>
+                        <dd>Настраиваемый лимит FPS</dd>
+                      </div>
+                    </dl>
+                  </div>
+                </article>
+
+                <article class="step" data-name="Конфиг" aria-labelledby="step-configs" data-reveal>
+                  <a class="shot" href="assets/gui/configs.png" aria-label="Увеличить скриншот: Конфиг">
+                    <picture>
+                      <source srcset="assets/gui/configs.webp" type="image/webp" />
+                      <img
+                        src="assets/gui/configs.png"
+                        alt="Albion AI — вкладка «Конфиг»"
+                        width="816"
+                        height="536"
+                        decoding="async"
+                      />
+                    </picture>
+                    <span class="shot-hint" aria-hidden="true"
+                      ><svg class="icon"><use href="#i-zoom" /></svg>Увеличить</span
+                    >
+                  </a>
+                  <div class="step-copy">
+                    <p class="kicker">
+                      <svg class="icon" aria-hidden="true"><use href="#i-folder" /></svg>Конфиг
+                    </p>
+                    <h3 id="step-configs">Один раз настроил. Сохранил.</h3>
+                    <p>Создавай конфиги под разные сценарии и загружай нужный из списка.</p>
+                    <dl>
+                      <div>
+                        <dt>Профили</dt>
+                        <dd>Несколько конфигураций в одном списке</dd>
+                      </div>
+                      <div>
+                        <dt>Сохранение</dt>
+                        <dd>Сохрани текущие настройки</dd>
+                      </div>
+                      <div>
+                        <dt>Загрузка</dt>
+                        <dd>Вернись к сохранённому конфигу</dd>
+                      </div>
+                    </dl>
+                  </div>
+                </article>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="wrap fine-print">
+          Параметры на скриншотах приведены для примера. Возможности зависят от версии приложения и выбранной
+          модели.
+        </p>
+      </section>
+
+      <section class="section hardware" id="hardware" aria-labelledby="hardware-title">
+        <div class="wrap">
+          <div class="section-head" data-reveal>
+            <div>
+              <p class="eyebrow">Оборудование</p>
+              <h2 id="hardware-title">Выбирай свой способ подключения.</h2>
+            </div>
+            <p class="lead">
+              Программное наведение или аппаратная эмуляция мыши. Дополнительные устройства необязательны.
+            </p>
+          </div>
+
+          <div class="hw-grid">
+            <article class="hw-card" data-reveal="zoom">
+              <div class="hw-media">
+                <picture>
+                  <source srcset="assets/makcu-board.webp" type="image/webp" />
+                  <img
+                    src="assets/makcu-board.png"
+                    alt="Плата MAKCU Board для аппаратной эмуляции мыши"
+                    width="398"
+                    height="382"
+                    loading="lazy"
+                    decoding="async"
+                    data-parallax="26"
+                  />
+                </picture>
+              </div>
+              <div class="hw-body">
+                <p class="hw-type">Аппаратная эмуляция</p>
+                <h3>MAKCU Board</h3>
+                <p>Специализированная плата для работы с внешними устройствами ввода и эмуляции мыши.</p>
+              </div>
+            </article>
+            <article class="hw-card" data-reveal="zoom" style="--d: 0.12s">
+              <div class="hw-media">
+                <picture>
+                  <source srcset="assets/arduino-leonardo-usb-host-shield.webp" type="image/webp" />
+                  <img
+                    src="assets/arduino-leonardo-usb-host-shield.png"
+                    alt="Arduino Leonardo с USB Host Shield"
+                    width="759"
+                    height="600"
+                    loading="lazy"
+                    decoding="async"
+                    data-parallax="26"
+                  />
+                </picture>
+              </div>
+              <div class="hw-body">
+                <p class="hw-type">Альтернативное решение</p>
+                <h3>Arduino Leonardo <span>+ USB Host Shield</span></h3>
+                <p>Связка на базе Arduino для подключения устройств ввода и аппаратной эмуляции.</p>
+              </div>
+            </article>
+          </div>
+
+          <div class="hw-note" data-reveal>
+            <span class="hw-note-icon"
+              ><svg class="icon" aria-hidden="true"><use href="#i-monitor" /></svg
+            ></span>
+            <p>
+              <strong>Можно и без дополнительного оборудования.</strong> В интерфейсе предусмотрен WinAPI
+              (SendInput) — программный способ наведения.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section faq" id="faq" aria-labelledby="faq-title">
+        <div class="wrap faq-grid">
+          <div class="faq-head" data-reveal>
+            <p class="eyebrow">FAQ</p>
+            <h2 id="faq-title">Есть вопросы?</h2>
+            <p class="lead">Коротко о настройках, оборудовании и работе приложения.</p>
+          </div>
+          <div class="faq-list" data-reveal style="--d: 0.1s">
+            <details class="faq-item">
+              <summary>
+                Как работает Albion AI?
+                <span class="faq-icon"><svg class="icon" aria-hidden="true"><use href="#i-plus" /></svg></span>
+              </summary>
+              <div class="faq-answer">
+                <p>
+                  Приложение распознаёт объекты на экране с помощью выбранной модели. Наведение и визуализация
+                  настраиваются в интерфейсе: можно менять скорость, область захвата, точку наведения и порог
+                  уверенности.
+                </p>
+              </div>
+            </details>
+            <details class="faq-item">
+              <summary>
+                Нужно ли дополнительное оборудование?
+                <span class="faq-icon"><svg class="icon" aria-hidden="true"><use href="#i-plus" /></svg></span>
+              </summary>
+              <div class="faq-answer">
+                <p>
+                  Нет, дополнительное оборудование необязательно. В интерфейсе есть программный способ наведения
+                  WinAPI (SendInput). Для аппаратной эмуляции предусмотрены MAKCU Board и Arduino Leonardo с USB
+                  Host Shield.
+                </p>
+              </div>
+            </details>
+            <details class="faq-item">
+              <summary>
+                Можно сохранить несколько наборов настроек?
+                <span class="faq-icon"><svg class="icon" aria-hidden="true"><use href="#i-plus" /></svg></span>
+              </summary>
+              <div class="faq-answer">
+                <p>
+                  Да. Во вкладке «Конфиг» можно создать конфигурацию, сохранить текущие настройки и загрузить
+                  другой профиль из списка.
+                </p>
+              </div>
+            </details>
+            <details class="faq-item">
+              <summary>
+                От чего зависит производительность?
+                <span class="faq-icon"><svg class="icon" aria-hidden="true"><use href="#i-plus" /></svg></span>
+              </summary>
+              <div class="faq-answer">
+                <p>
+                  От оборудования, выбранной модели и настроек захвата. Значения FPS и времени инференса на
+                  скриншотах относятся к конкретному запуску, а не являются гарантией для любой системы.
+                </p>
+              </div>
+            </details>
+            <details class="faq-item">
+              <summary>
+                Где купить и как связаться?
+                <span class="faq-icon"><svg class="icon" aria-hidden="true"><use href="#i-plus" /></svg></span>
+              </summary>
+              <div class="faq-answer">
+                <p>Продажи ещё не открыты. Ссылки на покупку, Telegram и Discord появятся на этой странице.</p>
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta" aria-labelledby="cta-title">
+        <div class="wrap">
+          <h2 id="cta-title" data-scrub>Настройки твои.<br />Контроль тоже.</h2>
+          <div class="cta-status" data-reveal>
+            <!-- When sales open, replace this pill with a link: <a class="btn btn-primary" href="…">Купить Albion AI</a> -->
+            <span class="status-pill"><i aria-hidden="true"></i>Скоро в продаже</span>
+            <p>Ссылки на покупку и каналы связи появятся здесь.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap footer-row">
+        <a class="brand" href="#top" aria-label="Albion AI — наверх">
+          <img src="assets/logo.png" alt="" width="26" height="26" />
+          <span>Albion <span class="brand-ai">AI</span></span>
+        </a>
+        <p>© 2026 Albion AI. Перед использованием проверь правила конкретной игры.</p>
+        <a class="to-top" href="#top"
+          >Наверх <svg class="icon" aria-hidden="true"><use href="#i-arrow-up" /></svg
+        ></a>
+      </div>
+    </footer>
+
+    <dialog class="lightbox" id="lightbox" aria-labelledby="lightbox-title">
+      <div class="lightbox-bar">
+        <p id="lightbox-title">Интерфейс Albion AI</p>
+        <div class="lightbox-tools">
+          <button class="zoom-toggle" type="button" aria-pressed="false" aria-label="Показать скриншот в масштабе 100%" hidden>
+            100%
+          </button>
+          <button class="icon-button" type="button" data-close aria-label="Закрыть скриншот">
+            <svg class="icon" aria-hidden="true"><use href="#i-x" /></svg>
+          </button>
+        </div>
+      </div>
+      <div class="lightbox-stage" tabindex="0" role="region" aria-label="Скриншот интерфейса">
+        <img id="lightbox-image" alt="" width="816" height="536" />
+      </div>
+      <div class="lightbox-nav">
+        <button class="icon-button" type="button" data-prev aria-label="Предыдущий скриншот">
+          <svg class="icon" aria-hidden="true"><use href="#i-chevron-left" /></svg>
+        </button>
+        <p id="lightbox-caption" aria-live="polite"></p>
+        <button class="icon-button" type="button" data-next aria-label="Следующий скриншот">
+          <svg class="icon" aria-hidden="true"><use href="#i-chevron-right" /></svg>
+        </button>
+      </div>
+    </dialog>
+  </body>
+</html>
