@@ -9,7 +9,8 @@ one click.
 Chrome extensions cannot speak VLESS, REALITY or Hysteria2, and cannot open raw sockets. So the extension
 comes with a small helper:
 
-- `extension/` – the Chrome extension (Manifest V3): popup, subscription parser, Xray config builder.
+- The project folder itself is the Chrome extension (Manifest V3): `manifest.json`, the popup, the
+  background worker, and `lib/` with the subscription parser and Xray config builder.
 - `host/` – a Node.js native messaging helper. It runs [Xray-core](https://github.com/XTLS/Xray-core) with a
   SOCKS5 inbound on `127.0.0.1` and does the latency tests. The extension points Chrome's proxy at that
   port while connected and removes the setting on disconnect.
@@ -30,7 +31,8 @@ Requires Node.js 18+ and Chrome, Chromium, Brave or Edge 116+.
    ```
 
 2. Open `chrome://extensions`, turn on **Developer mode**, choose **Load unpacked** and select the
-   `extension/` folder.
+   project folder – the one that directly contains `manifest.json`. If Chrome says the manifest is
+   missing, you picked a folder one level too high or too low.
 3. Open the popup, paste your subscription link and press **Load servers**. Chrome asks for permission to
    read that one site.
 

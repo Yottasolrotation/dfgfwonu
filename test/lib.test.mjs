@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import { countryFromName, parseSubscription, parseUserinfo, decodeHeaderText } from '../extension/lib/subscription.js';
-import { buildConnectConfig, buildTestConfig } from '../extension/lib/xray.js';
+import { countryFromName, parseSubscription, parseUserinfo, decodeHeaderText } from '../lib/subscription.js';
+import { buildConnectConfig, buildTestConfig } from '../lib/xray.js';
 
 const UUID = '11111111-2222-4333-8444-555555555555';
 const KR = encodeURIComponent('🇰🇷 Южная Корея #3');

@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url';
 import zlib from 'node:zlib';
 
 const HOST_NAME = 'com.polaris.vpn';
-// Fixed by the "key" in extension/manifest.json.
+// Fixed by the "key" in manifest.json.
 const EXTENSION_ID = 'anhbmmdhphegkmdfdfnmnbnabnoapdhe';
 const XRAY_VERSION = 'v26.11.9';
 // SHA-256 of each release archive, from the .dgst files published with the release.
