@@ -2,96 +2,114 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Polaris VPN</title>
+    <title>Albion</title>
     <link rel="stylesheet" href="popup.css" />
   </head>
   <body data-status="disconnected">
-    <header class="top">
-      <div class="brand">
-        <img src="icons/icon48.png" alt="" width="30" height="30" />
-        <div>
-          <h1>Polaris</h1>
-          <p id="profile">Browser VPN</p>
-        </div>
-      </div>
-      <div class="top-actions">
-        <button id="refresh" class="icon-btn" title="Reload servers from the subscription" aria-label="Reload servers">
-          <svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.6-5.9" /><path d="M20 4v5h-5" /></svg>
+    <nav class="rail" aria-label="Sections">
+      <svg class="mark" viewBox="0 0 32 32" role="img" aria-label="Albion">
+        <path d="M8 26 16 6l8 20" />
+        <path class="mark-bar" d="M12.5 19h7" />
+      </svg>
+      <div class="rail-nav">
+        <button class="nav" data-view="servers" title="Servers" aria-label="Servers">
+          <svg viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M4.5 6h.01M4.5 12h.01M4.5 18h.01" /></svg>
         </button>
-        <button id="settings" class="icon-btn" title="Subscription" aria-label="Subscription settings">
+        <button class="nav" data-view="details" title="Details" aria-label="Details">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" /><path d="M12 11v5M12 8h.01" /></svg>
+        </button>
+        <button class="nav" data-view="settings" title="Subscription" aria-label="Subscription">
           <svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10" /><circle cx="16" cy="7" r="2" /><circle cx="8" cy="17" r="2" /></svg>
         </button>
       </div>
-    </header>
-
-    <section id="setup" class="setup" hidden>
-      <div class="setup-art">
-        <img src="icons/icon128.png" alt="" width="72" height="72" />
+      <div id="rail-status" class="rail-status">
+        <i class="dot" aria-hidden="true"></i>
+        <span id="rail-label">Off</span>
       </div>
-      <h2 id="setup-title">Add your subscription</h2>
-      <p class="setup-text">
-        Paste the subscription link from your VPN provider. Servers are loaded from it and stay in this browser.
-      </p>
-      <form id="setup-form">
-        <input id="sub-url" type="url" placeholder="https://provider.example/your-token" autocomplete="off" spellcheck="false" required />
-        <button class="primary" type="submit" id="setup-submit">Load servers</button>
-      </form>
-      <p id="setup-error" class="setup-error" hidden></p>
-      <div class="setup-links">
-        <button id="setup-back" class="link" hidden>Back to servers</button>
-        <button id="setup-remove" class="link danger" hidden>Remove subscription</button>
-      </div>
-    </section>
+    </nav>
 
-    <main id="app" hidden>
-      <section class="hero">
-        <button id="power" class="power" aria-label="Connect">
-          <span class="ring"></span>
-          <svg viewBox="0 0 24 24"><path d="M12 3v9" /><path d="M6.3 6.8a8 8 0 1 0 11.4 0" /></svg>
+    <div class="main">
+      <header class="top">
+        <h1>Albion</h1>
+        <button id="refresh" class="icon-btn" title="Reload servers" aria-label="Reload servers">
+          <svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.6-5.9" /><path d="M20 4v5h-5" /></svg>
         </button>
-        <div class="hero-text">
-          <div class="status-line">
-            <div id="status-title" class="status-title">Not connected</div>
-            <div id="stat-up" class="uptime" title="Connected for"></div>
-          </div>
-          <div id="status-sub" class="status-sub">Pick a server and press the button</div>
-          <div class="exit">
-            <span id="stat-ip" class="pill"></span>
-            <span id="stat-loc" class="pill loc"></span>
-          </div>
-        </div>
-      </section>
+      </header>
 
       <div id="notice" class="notice" hidden>
         <span id="notice-text"></span>
         <button id="notice-action" class="link" hidden>Retry</button>
       </div>
 
-      <section id="quota" class="quota" hidden>
-        <div class="quota-line"><span id="quota-used"></span><span id="quota-expire"></span></div>
-        <div class="bar"><i id="quota-bar"></i></div>
-      </section>
-
-      <section class="toolbar">
-        <div class="row">
-          <select id="country" aria-label="Country"></select>
-          <input id="search" type="search" placeholder="Search servers" aria-label="Search servers" />
-        </div>
-        <div class="row">
-          <div class="seg" role="group" aria-label="Test type">
-            <button data-mode="tcp" title="Time of a TCP handshake with the server">TCP ping</button>
-            <button data-mode="tunnel" title="Time of a real request sent through the server">Tunnel test</button>
+      <main id="app" hidden>
+        <section class="status">
+          <div class="status-text">
+            <div class="status-line">
+              <i class="dot" aria-hidden="true"></i>
+              <span id="status-title" class="status-title">Not connected</span>
+              <span id="stat-up" class="uptime" title="Connected for"></span>
+            </div>
+            <div id="status-sub" class="status-sub"></div>
           </div>
-          <button id="ping-all" class="primary small">
-            <svg viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z" /></svg>
-            <span>Test all</span>
+          <button id="power" class="btn">
+            <svg viewBox="0 0 24 24"><path d="M12 3v9" /><path d="M6.3 6.8a8 8 0 1 0 11.4 0" /></svg>
+            <span id="power-label">Connect</span>
           </button>
+          <div id="status-exit" class="status-exit"></div>
+        </section>
+
+        <section class="toolbar">
+          <div class="row">
+            <select id="country" aria-label="Country"></select>
+            <input id="search" type="search" placeholder="Search" aria-label="Search servers" />
+          </div>
+          <div class="row">
+            <span class="label">Latency</span>
+            <div class="seg" role="group" aria-label="Test type">
+              <button data-mode="tcp" title="Time of a TCP handshake with the server">TCP</button>
+              <button data-mode="tunnel" title="Time of a real request sent through the server">Tunnel</button>
+            </div>
+            <button id="ping-all" class="btn"><span>Test all</span></button>
+          </div>
+        </section>
+
+        <div id="servers" class="servers" role="listbox" aria-label="Servers"></div>
+        <footer id="footer" class="footer"></footer>
+      </main>
+
+      <section id="details" class="view" hidden>
+        <h2 class="caption">Subscription</h2>
+        <dl class="facts">
+          <div class="fact">
+            <dt>Usage</dt>
+            <dd id="quota-used"></dd>
+            <div id="quota-track" class="bar"><i id="quota-bar"></i></div>
+          </div>
+          <div class="fact"><dt>Expires</dt><dd id="quota-expire"></dd></div>
+          <div class="fact"><dt>Servers</dt><dd id="fact-servers"></dd></div>
+          <div class="fact"><dt>Updated</dt><dd id="fact-updated"></dd></div>
+        </dl>
+        <div id="details-server">
+          <h2 class="caption">Server</h2>
+          <dl class="facts">
+            <div class="fact"><dt>Name</dt><dd id="fact-name"></dd></div>
+            <div class="fact"><dt>Address</dt><dd id="fact-address"></dd></div>
+            <div class="fact"><dt>Protocol</dt><dd id="fact-protocol"></dd></div>
+            <div class="fact"><dt>Exit</dt><dd id="fact-exit"></dd></div>
+          </dl>
         </div>
       </section>
 
-      <div id="servers" class="servers" role="listbox" aria-label="Servers"></div>
-      <footer id="footer" class="footer"></footer>
-    </main>
+      <section id="setup" class="view" hidden>
+        <h2 class="caption">Subscription link</h2>
+        <form id="setup-form">
+          <input id="sub-url" type="url" placeholder="https://provider.example/your-token" aria-label="Subscription link" autocomplete="off" spellcheck="false" required />
+          <button class="btn primary" type="submit" id="setup-submit">Load servers</button>
+        </form>
+        <p id="setup-error" class="setup-error" hidden></p>
+        <button id="setup-remove" class="link danger" hidden>Remove subscription</button>
+      </section>
+    </div>
 
     <script type="module" src="popup.js"></script>
   </body>

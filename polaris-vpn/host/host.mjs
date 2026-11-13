@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Native messaging helper for the Polaris VPN extension. Chrome cannot speak
+// Native messaging helper for the Albion VPN extension. Chrome cannot speak
 // VLESS/REALITY/Hysteria2 itself, so this process runs Xray-core on loopback
 // and measures latency. It exits (and stops the core) when the browser closes
 // the pipe.

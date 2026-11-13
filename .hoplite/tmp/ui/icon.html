@@ -1,0 +1,26 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>icon</title>
+<body style="background: #888">
+  <script>
+    // Albion mark on a dark tile, drawn in a 32-unit grid.
+    function icon(size) {
+      const canvas = document.createElement('canvas');
+      canvas.width = canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      ctx.scale(size / 32, size / 32);
+      ctx.beginPath();
+      ctx.roundRect(1, 1, 30, 30, 7);
+      ctx.fillStyle = '#0f0f12';
+      ctx.fill();
+      ctx.lineCap = ctx.lineJoin = 'round';
+      ctx.lineWidth = size <= 16 ? 3.6 : 3.2;
+      ctx.strokeStyle = '#f2f2f3';
+      ctx.stroke(new Path2D('M9 24.5 16 7.5l7 17'));
+      ctx.strokeStyle = '#e23c45';
+      ctx.stroke(new Path2D('M13 18.5h6'));
+      document.body.append(canvas);
+      return canvas.toDataURL('image/png');
+    }
+  </script>
+</body>

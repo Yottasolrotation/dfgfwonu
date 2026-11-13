@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Installs the Polaris VPN helper: downloads a pinned Xray-core build and
+// Installs the Albion VPN helper: downloads a pinned Xray-core build and
 // registers host.mjs as a native messaging host for Chromium browsers.
 //   node host/install.mjs              install
 //   node host/install.mjs --uninstall  remove the registration
@@ -114,7 +114,7 @@ function register() {
   const manifest = JSON.stringify(
     {
       name: HOST_NAME,
-      description: 'Polaris VPN helper',
+      description: 'Albion VPN helper',
       path: writeLauncher(),
       type: 'stdio',
       allowed_origins: [`chrome-extension://${EXTENSION_ID}/`],
