@@ -115,7 +115,7 @@ async function clearProxy() {
 async function setConnection(connection) {
   await session.set({ connection });
   const on = connection.status === 'connected';
-  await chrome.action.setBadgeBackgroundColor({ color: '#10b981' });
+  await chrome.action.setBadgeBackgroundColor({ color: '#48c08b' });
   await chrome.action.setBadgeText({ text: on ? 'ON' : '' });
 }
 

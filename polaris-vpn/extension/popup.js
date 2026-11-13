@@ -5,7 +5,8 @@ const FLAG = /[\u{1F1E6}-\u{1F1FF}]{2}\s*/gu;
 const LIMITS = { tcp: [120, 300], tunnel: [900, 1800] };
 
 let state = { servers: [], connection: { status: 'disconnected' } };
-let settingsOpen = false;
+// Section shown in the popup: 'servers', 'details' or 'settings'.
+let view = 'servers';
 let search = '';
 let countryOptionsKey = '';
 let refreshing = false;
@@ -80,25 +81,28 @@ function selectedServer() {
 
 function render() {
   const hasServers = state.servers.length > 0;
-  const showSetup = !hasServers || settingsOpen;
-  $('setup').hidden = !showSetup;
-  $('app').hidden = showSetup;
-  $('refresh').hidden = !hasServers || showSetup;
-  $('settings').hidden = !hasServers || showSetup;
-  $('profile').textContent = state.meta?.title?.trim() || 'Browser VPN';
+  // Without servers there is nothing to show but the subscription form.
+  const shown = hasServers ? view : 'settings';
+  $('app').hidden = shown !== 'servers';
+  $('details').hidden = shown !== 'details';
+  $('setup').hidden = shown !== 'settings';
+  $('refresh').hidden = !hasServers;
+  for (const button of document.querySelectorAll('.nav')) {
+    button.disabled = !hasServers && button.dataset.view !== 'settings';
+    if (button.dataset.view === shown) button.setAttribute('aria-current', 'page');
+    else button.removeAttribute('aria-current');
+  }
 
-  if (showSetup) return renderSetup(hasServers);
   renderHero();
   renderNotice();
-  renderQuota();
+  if (shown === 'settings') return renderSetup(hasServers);
+  if (shown === 'details') return renderDetails();
   renderToolbar();
   renderServers();
 }
 
 function renderSetup(hasServers) {
-  $('setup-title').textContent = hasServers ? 'Subscription' : 'Add your subscription';
   $('setup-submit').textContent = hasServers ? 'Save and reload' : 'Load servers';
-  $('setup-back').hidden = !hasServers;
   $('setup-remove').hidden = !hasServers;
   if (hasServers && !$('sub-url').value) $('sub-url').value = state.subscriptionUrl ?? '';
 }
@@ -108,21 +112,26 @@ function renderHero() {
   const { status } = connection;
   document.body.dataset.status = status;
   const server = state.servers.find((s) => s.id === connection.serverId) ?? selectedServer();
-  const titles = { disconnected: 'Not connected', connecting: 'Connecting…', connected: 'Protected', error: 'Connection failed' };
+  const titles = { disconnected: 'Not connected', connecting: 'Connecting…', connected: 'Connected', error: 'Connection failed' };
   $('status-title').textContent = titles[status];
-  $('status-sub').textContent = server ? displayName(server) : 'Pick a server and press the button';
+  $('rail-label').textContent = { disconnected: 'Off', connecting: '···', connected: 'On', error: 'Error' }[status];
+  $('rail-status').title = titles[status];
+  $('status-sub').textContent = server ? displayName(server) : 'No server selected';
 
   const live = status === 'connected';
-  const exitIp = connection.exit?.ip ?? (connection.warning ? 'Exit IP unknown' : 'Checking exit IP…');
-  $('stat-ip').textContent = live ? exitIp : 'This browser uses your own IP';
-  $('stat-ip').title = live && connection.exit ? `Exit IP ${connection.exit.ip}` : '';
-  $('stat-loc').textContent = live && connection.exit?.country ? countryName(connection.exit.country) : '';
+  $('status-exit').textContent = live ? exitText(connection) : '';
+  $('status-exit').title = live && connection.exit ? 'Exit IP and country' : '';
   $('stat-up').textContent = live ? formatUptime(connection.since) : '';
 
   const busy = status === 'connected' || status === 'connecting';
   $('power').disabled = !busy && (!selectedServer() || selectedServer().unsupported || state.helper?.ok === false);
-  $('power').setAttribute('aria-label', busy ? 'Disconnect' : 'Connect');
-  $('power').title = busy ? 'Disconnect' : 'Connect';
+  $('power-label').textContent = status === 'connected' ? 'Disconnect' : status === 'connecting' ? 'Cancel' : 'Connect';
+}
+
+function exitText(connection) {
+  const ip = connection.exit?.ip ?? (connection.warning ? 'Exit IP unknown' : 'Checking exit IP…');
+  const country = connection.exit?.country ? countryName(connection.exit.country) : '';
+  return [ip, country].filter(Boolean).join(' · ');
 }
 
 function renderNotice() {
@@ -154,16 +163,38 @@ function renderNotice() {
   $('notice-action').hidden = helper?.ok !== false;
 }
 
-function renderQuota() {
-  const info = state.meta?.userinfo;
-  $('quota').hidden = !info?.total;
-  if (!info?.total) return;
-  const used = (info.upload ?? 0) + (info.download ?? 0);
-  $('quota-used').textContent = `${formatBytes(used)} of ${formatBytes(info.total)} used`;
-  $('quota-expire').textContent = info.expire
-    ? `until ${new Date(info.expire * 1000).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}`
-    : '';
-  $('quota-bar').style.width = `${Math.min(100, (used / info.total) * 100)}%`;
+// Fills one row of the details view and hides the row when there is nothing to show.
+function fact(id, value) {
+  $(id).textContent = value;
+  $(id).closest('.fact').hidden = !value;
+}
+
+function protocolLabel(server) {
+  if (server.protocol === 'hysteria2') return 'Hysteria2';
+  return `VLESS · ${server.security === 'reality' ? 'REALITY' : server.transport.toUpperCase()}`;
+}
+
+function renderDetails() {
+  const { connection, meta } = state;
+  const info = meta?.userinfo;
+  const used = (info?.upload ?? 0) + (info?.download ?? 0);
+  fact('quota-used', info?.total ? `${formatBytes(used)} of ${formatBytes(info.total)}` : info ? formatBytes(used) : '');
+  $('quota-track').hidden = !info?.total;
+  if (info?.total) $('quota-bar').style.width = `${Math.min(100, (used / info.total) * 100)}%`;
+  fact(
+    'quota-expire',
+    info?.expire ? new Date(info.expire * 1000).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '',
+  );
+  fact('fact-servers', String(state.servers.length));
+  fact('fact-updated', meta?.fetchedAt ? new Date(meta.fetchedAt).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' }) : '');
+
+  const server = state.servers.find((s) => s.id === connection.serverId) ?? selectedServer();
+  $('details-server').hidden = !server;
+  if (!server) return;
+  fact('fact-name', displayName(server));
+  fact('fact-address', `${server.host}:${server.port}`);
+  fact('fact-protocol', protocolLabel(server));
+  fact('fact-exit', connection.status === 'connected' ? exitText(connection) : '');
 }
 
 function renderToolbar() {
@@ -233,38 +264,27 @@ function renderServers() {
     cc.textContent = server.country ?? '··';
     cc.title = server.country ? countryName(server.country) : '';
 
-    const view = latencyView(server, fastestId);
-    const name = document.createElement('div');
+    const latencyInfo = latencyView(server, fastestId);
+    const name = document.createElement('span');
     name.className = 'name';
-    const label = document.createElement('span');
-    label.textContent = displayName(server);
-    label.title = server.name;
-    name.append(label);
-    if (view.fastest) {
-      const tag = document.createElement('span');
-      tag.className = 'tag';
-      tag.textContent = 'fastest';
-      name.append(tag);
-    }
-
-    const sub = document.createElement('div');
-    sub.className = 'sub';
-    const kind =
-      server.protocol === 'hysteria2' ? 'Hysteria2' : `VLESS · ${server.security === 'reality' ? 'REALITY' : server.transport.toUpperCase()}`;
-    sub.textContent = server.unsupported ?? `${server.host}:${server.port} · ${kind}`;
-
-    const info = document.createElement('div');
-    info.className = 'info';
-    info.append(name, sub);
+    name.textContent = displayName(server);
+    // Address and protocol stay out of the row; the tooltip and the details view carry them.
+    row.title = server.unsupported ?? `${server.host}:${server.port} · ${protocolLabel(server)}`;
 
     const latency = document.createElement('button');
-    latency.className = `latency ${view.cls}`;
-    latency.textContent = view.text;
-    latency.title = view.mode === 'tunnel' ? 'Request through the tunnel. Click to test again' : 'Click to test this server';
+    latency.className = `latency ${latencyInfo.cls}`;
+    latency.classList.toggle('fastest', Boolean(latencyInfo.fastest));
+    latency.textContent = server.unsupported ? 'n/a' : latencyInfo.text;
+    const hint = latencyInfo.mode === 'tunnel' ? 'Request through the tunnel. Click to test again' : 'Click to test this server';
+    latency.title = latencyInfo.fastest ? `Fastest in this list. ${hint}` : hint;
     latency.disabled = Boolean(server.unsupported) || Boolean(state.pinging) || state.helper?.ok === false;
     latency.dataset.ping = server.id;
 
-    row.append(cc, info, latency);
+    const check = document.createElement('span');
+    check.className = 'check';
+    check.setAttribute('aria-hidden', 'true');
+
+    row.append(cc, name, latency, check);
     return row;
   });
 
@@ -278,8 +298,7 @@ function renderServers() {
   box.replaceChildren(...rows);
   box.scrollTop = scroll;
 
-  const updated = state.meta?.fetchedAt ? new Date(state.meta.fetchedAt).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' }) : '—';
-  $('footer').textContent = `${servers.length} of ${state.servers.length} servers · updated ${updated}`;
+  $('footer').textContent = `${servers.length} of ${state.servers.length} servers`;
 }
 
 // ------------------------------------------------------------------ actions
@@ -344,7 +363,7 @@ async function submitSubscription(event) {
     button.disabled = true;
     button.textContent = 'Loading…';
     await send('refresh', { url: url.href });
-    settingsOpen = false;
+    view = 'servers';
     $('sub-url').value = '';
     await load();
   } catch (failure) {
@@ -359,20 +378,18 @@ async function submitSubscription(event) {
 // ------------------------------------------------------------------- wiring
 
 $('setup-form').addEventListener('submit', submitSubscription);
-$('setup-back').addEventListener('click', () => {
-  settingsOpen = false;
-  render();
-});
 $('setup-remove').addEventListener('click', async () => {
   await send('removeSubscription').catch(report);
-  settingsOpen = false;
+  view = 'servers';
   $('sub-url').value = '';
   await load();
 });
-$('settings').addEventListener('click', () => {
-  settingsOpen = true;
-  render();
-});
+for (const button of document.querySelectorAll('.nav')) {
+  button.addEventListener('click', () => {
+    view = button.dataset.view;
+    render();
+  });
+}
 $('refresh').addEventListener('click', reload);
 $('power').addEventListener('click', togglePower);
 $('notice-action').addEventListener('click', () => send('checkHelper').catch(report));

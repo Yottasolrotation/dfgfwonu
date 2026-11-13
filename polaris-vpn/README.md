@@ -1,4 +1,4 @@
-# Polaris VPN
+# Albion VPN
 
 A Chrome extension that sends this browser's traffic (and only this browser's) through the servers of a
 VLESS / Hysteria2 subscription. It lists the servers by country, measures their latency and connects with
