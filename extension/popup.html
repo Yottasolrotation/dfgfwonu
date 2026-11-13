@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Polaris VPN</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body data-status="disconnected">
+    <header class="top">
+      <div class="brand">
+        <img src="icons/icon48.png" alt="" width="30" height="30" />
+        <div>
+          <h1>Polaris</h1>
+          <p id="profile">Browser VPN</p>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button id="refresh" class="icon-btn" title="Reload servers from the subscription" aria-label="Reload servers">
+          <svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.6-5.9" /><path d="M20 4v5h-5" /></svg>
+        </button>
+        <button id="settings" class="icon-btn" title="Subscription" aria-label="Subscription settings">
+          <svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10" /><circle cx="16" cy="7" r="2" /><circle cx="8" cy="17" r="2" /></svg>
+        </button>
+      </div>
+    </header>
+
+    <section id="setup" class="setup" hidden>
+      <div class="setup-art">
+        <img src="icons/icon128.png" alt="" width="72" height="72" />
+      </div>
+      <h2 id="setup-title">Add your subscription</h2>
+      <p class="setup-text">
+        Paste the subscription link from your VPN provider. Servers are loaded from it and stay in this browser.
+      </p>
+      <form id="setup-form">
+        <input id="sub-url" type="url" placeholder="https://provider.example/your-token" autocomplete="off" spellcheck="false" required />
+        <button class="primary" type="submit" id="setup-submit">Load servers</button>
+      </form>
+      <p id="setup-error" class="setup-error" hidden></p>
+      <div class="setup-links">
+        <button id="setup-back" class="link" hidden>Back to servers</button>
+        <button id="setup-remove" class="link danger" hidden>Remove subscription</button>
+      </div>
+    </section>
+
+    <main id="app" hidden>
+      <section class="hero">
+        <button id="power" class="power" aria-label="Connect">
+          <span class="ring"></span>
+          <svg viewBox="0 0 24 24"><path d="M12 3v9" /><path d="M6.3 6.8a8 8 0 1 0 11.4 0" /></svg>
+        </button>
+        <div class="hero-text">
+          <div class="status-line">
+            <div id="status-title" class="status-title">Not connected</div>
+            <div id="stat-up" class="uptime" title="Connected for"></div>
+          </div>
+          <div id="status-sub" class="status-sub">Pick a server and press the button</div>
+          <div class="exit">
+            <span id="stat-ip" class="pill"></span>
+            <span id="stat-loc" class="pill loc"></span>
+          </div>
+        </div>
+      </section>
+
+      <div id="notice" class="notice" hidden>
+        <span id="notice-text"></span>
+        <button id="notice-action" class="link" hidden>Retry</button>
+      </div>
+
+      <section id="quota" class="quota" hidden>
+        <div class="quota-line"><span id="quota-used"></span><span id="quota-expire"></span></div>
+        <div class="bar"><i id="quota-bar"></i></div>
+      </section>
+
+      <section class="toolbar">
+        <div class="row">
+          <select id="country" aria-label="Country"></select>
+          <input id="search" type="search" placeholder="Search servers" aria-label="Search servers" />
+        </div>
+        <div class="row">
+          <div class="seg" role="group" aria-label="Test type">
+            <button data-mode="tcp" title="Time of a TCP handshake with the server">TCP ping</button>
+            <button data-mode="tunnel" title="Time of a real request sent through the server">Tunnel test</button>
+          </div>
+          <button id="ping-all" class="primary small">
+            <svg viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z" /></svg>
+            <span>Test all</span>
+          </button>
+        </div>
+      </section>
+
+      <div id="servers" class="servers" role="listbox" aria-label="Servers"></div>
+      <footer id="footer" class="footer"></footer>
+    </main>
+
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>

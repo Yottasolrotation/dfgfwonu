@@ -1,0 +1,15 @@
+{
+  "name": "polaris-vpn",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Chrome extension that routes the browser through a VLESS / Hysteria2 subscription",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "install-helper": "node host/install.mjs",
+    "uninstall-helper": "node host/install.mjs --uninstall",
+    "test": "node --test"
+  }
+}
